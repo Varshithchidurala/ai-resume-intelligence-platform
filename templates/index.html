@@ -1,53 +1,93 @@
 <!DOCTYPE html>
 <html>
-
 <head>
 <title>AI Resume Intelligence Platform</title>
 <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gradient-to-br from-gray-900 to-black text-white min-h-screen">
+<body class="bg-gray-900 text-white">
 
 <div class="max-w-6xl mx-auto p-10">
 
-<h1 class="text-4xl font-bold text-center mb-6">
+<div class="text-center mb-10">
+
+<h1 class="text-5xl font-bold mb-4">
 AI Resume Intelligence Platform
 </h1>
 
-<p class="text-center text-gray-400 mb-10">
-Upload your resume and get AI-powered career insights
+<p class="text-gray-300 text-lg">
+Upload your resume and get AI-Powered career insights
 </p>
+
+<p class="text-gray-400 text-sm">
+Analyze resumes, calculate ATS scores, detect missing skills and explore job opportunities
+</p>
+
+</div>
+
 
 <form method="POST" enctype="multipart/form-data">
 
-<div class="border-2 border-dashed border-blue-400 p-10 rounded-xl text-center mb-6">
+<div class="border-2 border-dashed border-blue-400 p-10 rounded-xl text-center bg-gray-800">
 
-<input type="file" name="resume" required>
+<p class="mb-4 text-gray-300">
+Upload Resume (PDF only)
+</p>
 
-<button class="bg-blue-500 px-6 py-2 rounded ml-4">
-Analyze Resume
+<input type="file" name="resume" accept=".pdf" required>
+
+<br><br>
+
+<button class="bg-blue-500 hover:bg-blue-600 px-6 py-2 rounded shadow-lg">
+Analyze Resume 🚀
 </button>
 
 </div>
 
 </form>
 
+
+{% if error %}
+
+<div class="bg-red-500 text-white p-4 rounded-lg mt-6 text-center">
+⚠ {{error}}
+</div>
+
+{% endif %}
+
+
+<div id="loading" class="hidden text-center mt-10">
+
+<div class="animate-pulse text-blue-400 text-lg">
+AI is analyzing your resume...
+</div>
+
+<div class="mt-4 w-full bg-gray-700 h-4 rounded">
+
+<div id="progressBar" class="bg-blue-500 h-4 rounded w-0"></div>
+
+</div>
+
+</div>
+
+
 {% if score %}
 
 <div class="grid grid-cols-3 gap-6 mt-10 text-center">
 
-<div class="bg-gray-800 p-6 rounded-xl">
-<h3>Resume Score</h3>
+<div class="bg-gray-800 p-6 rounded-xl shadow">
+Resume Score
 <h2 class="text-green-400 text-2xl">{{score}} / 50</h2>
 </div>
 
-<div class="bg-gray-800 p-6 rounded-xl">
-<h3>ATS Score</h3>
+<div class="bg-gray-800 p-6 rounded-xl shadow">
+ATS Score
 <h2 class="text-blue-400 text-2xl">{{ats}} / 50</h2>
 </div>
 
-<div class="bg-gray-800 p-6 rounded-xl">
-<h3>Career Match</h3>
+<div class="bg-gray-800 p-6 rounded-xl shadow">
+Career Match
+<br>
 <a href="/career/{{role_url}}" class="text-purple-400 underline text-xl">
 {{role}}
 </a>
@@ -56,23 +96,23 @@ Analyze Resume
 </div>
 
 
-<h2 class="mt-10 text-xl">Detected Skills</h2>
+<h2 class="text-2xl mt-10 mb-4">Detected Skills</h2>
 
 {% for s in skills %}
 <span class="bg-green-500 px-3 py-1 rounded m-1 inline-block">{{s}}</span>
 {% endfor %}
 
 
-<h2 class="mt-6 text-xl">Missing Skills</h2>
+<h2 class="text-2xl mt-6 mb-4">Missing Skills</h2>
 
 {% for m in missing %}
 <span class="bg-red-500 px-3 py-1 rounded m-1 inline-block">{{m}}</span>
 {% endfor %}
 
 
-<h2 class="mt-10 text-xl">AI Resume Suggestions</h2>
+<h2 class="text-2xl mt-6 mb-4">AI Resume Suggestions</h2>
 
-<div class="bg-gray-800 p-5 rounded-xl">
+<div class="bg-gray-800 p-4 rounded-xl">
 
 {% for s in suggestions %}
 <p>✔ {{s}}</p>
@@ -81,34 +121,40 @@ Analyze Resume
 </div>
 
 
-<h2 class="text-2xl mt-10 mb-4">
-Internship Opportunities (India)
-</h2>
+<h2 class="text-2xl mt-10 mb-4">Internship Opportunities</h2>
 
 <div class="grid grid-cols-3 gap-6">
 
-<a href="https://internshala.com" target="_blank" class="bg-purple-700 p-5 rounded-xl">Internshala</a>
-<a href="https://www.linkedin.com/jobs/internships" target="_blank" class="bg-purple-600 p-5 rounded-xl">LinkedIn Internships</a>
-<a href="https://in.indeed.com/jobs?q=internship" target="_blank" class="bg-purple-500 p-5 rounded-xl">Indeed Internships</a>
-<a href="https://www.letsintern.com" target="_blank" class="bg-purple-400 p-5 rounded-xl text-black">LetsIntern</a>
-<a href="https://www.twenty19.com" target="_blank" class="bg-purple-300 p-5 rounded-xl text-black">Twenty19</a>
-<a href="https://wellfound.com/jobs" target="_blank" class="bg-purple-200 p-5 rounded-xl text-black">AngelList</a>
+<a href="https://internshala.com" target="_blank" class="bg-purple-600 p-5 rounded-xl hover:scale-105 transition shadow-xl text-center">Internshala</a>
+
+<a href="https://linkedin.com/jobs/internships" target="_blank" class="bg-purple-500 p-5 rounded-xl hover:scale-105 transition shadow-xl text-center">LinkedIn</a>
+
+<a href="https://indeed.com/jobs?q=internship" target="_blank" class="bg-purple-400 p-5 rounded-xl hover:scale-105 transition shadow-xl text-center">Indeed</a>
+
+<a href="https://letsintern.com" target="_blank" class="bg-purple-300 p-5 rounded-xl hover:scale-105 transition shadow-xl text-black text-center">LetsIntern</a>
+
+<a href="https://twenty19.com" target="_blank" class="bg-purple-200 p-5 rounded-xl hover:scale-105 transition shadow-xl text-black text-center">Twenty19</a>
+
+<a href="https://wellfound.com/jobs" target="_blank" class="bg-purple-100 p-5 rounded-xl hover:scale-105 transition shadow-xl text-black text-center">AngelList</a>
 
 </div>
 
 
-<h2 class="text-2xl mt-12 mb-4">
-Live Job Opportunities (India)
-</h2>
+<h2 class="text-2xl mt-10 mb-4">Job Opportunities</h2>
 
 <div class="grid grid-cols-3 gap-6">
 
-<a href="https://www.linkedin.com/jobs" target="_blank" class="bg-teal-700 p-5 rounded-xl">LinkedIn Jobs</a>
-<a href="https://in.indeed.com" target="_blank" class="bg-teal-600 p-5 rounded-xl">Indeed Jobs</a>
-<a href="https://www.naukri.com" target="_blank" class="bg-teal-500 p-5 rounded-xl">Naukri</a>
-<a href="https://www.glassdoor.co.in" target="_blank" class="bg-teal-400 p-5 rounded-xl text-black">Glassdoor</a>
-<a href="https://www.freshersworld.com" target="_blank" class="bg-teal-300 p-5 rounded-xl text-black">FreshersWorld</a>
-<a href="https://foundit.in" target="_blank" class="bg-teal-200 p-5 rounded-xl text-black">Foundit</a>
+<a href="https://linkedin.com/jobs" target="_blank" class="bg-teal-600 p-5 rounded-xl hover:scale-105 transition shadow-xl text-center">LinkedIn</a>
+
+<a href="https://indeed.com" target="_blank" class="bg-teal-500 p-5 rounded-xl hover:scale-105 transition shadow-xl text-center">Indeed</a>
+
+<a href="https://naukri.com" target="_blank" class="bg-teal-400 p-5 rounded-xl hover:scale-105 transition shadow-xl text-black text-center">Naukri</a>
+
+<a href="https://glassdoor.co.in" target="_blank" class="bg-teal-300 p-5 rounded-xl hover:scale-105 transition shadow-xl text-black text-center">Glassdoor</a>
+
+<a href="https://freshersworld.com" target="_blank" class="bg-teal-200 p-5 rounded-xl hover:scale-105 transition shadow-xl text-black text-center">FreshersWorld</a>
+
+<a href="https://foundit.in" target="_blank" class="bg-teal-100 p-5 rounded-xl hover:scale-105 transition shadow-xl text-black text-center">Foundit</a>
 
 </div>
 
