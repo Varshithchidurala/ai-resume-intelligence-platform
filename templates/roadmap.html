@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<script src="https://cdn.tailwindcss.com"></script>
+<title>{{role}} Roadmap</title>
+</head>
+
+<body class="bg-gray-900 text-white p-10">
+
+<div class="max-w-4xl mx-auto">
+
+<h1 class="text-4xl mb-8">{{role}} Learning Roadmap</h1>
+
+<div class="bg-gray-800 p-6 rounded-xl">
+
+<ol class="list-decimal ml-6 space-y-3">
+
+{% for step in data.roadmap %}
+<li>{{step}}</li>
+{% endfor %}
+
+</ol>
+
+</div>
+
+<a href="/career/{{role}}" class="text-blue-400 underline mt-6 block">
+Back to Career Page
+</a>
+
+</div>
+
+</body>
+</html>
