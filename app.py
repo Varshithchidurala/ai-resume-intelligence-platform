@@ -8,56 +8,63 @@ UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/", methods=["GET","POST"])
 def index():
 
-    score = None
-    ats = None
-    role = None
-    role_url = None
-    skills = []
-    missing = []
-    suggestions = []
+    score=None
+    ats=None
+    role=None
+    role_url=None
+    skills=[]
+    missing=[]
+    suggestions=[]
+    error=None
 
-    if request.method == "POST":
+    if request.method=="POST":
 
-        file = request.files["resume"]
-        filepath = os.path.join(UPLOAD_FOLDER, file.filename)
+        file=request.files["resume"]
+
+        if not file.filename.endswith(".pdf"):
+            return render_template(
+                "index.html",
+                error="Please upload a PDF resume file only."
+            )
+
+        filepath=os.path.join(UPLOAD_FOLDER,file.filename)
         file.save(filepath)
 
-        reader = PdfReader(filepath)
+        reader=PdfReader(filepath)
 
-        text = ""
+        text=""
         for page in reader.pages:
-            text += page.extract_text()
+            text+=page.extract_text()
 
-        text = text.lower()
+        text=text.lower()
 
-        skill_keywords = [
+        skill_keywords=[
             "python","sql","machine learning","html","css",
-            "javascript","flask","java","deep learning",
-            "react","django"
+            "javascript","flask","java","react","django"
         ]
 
-        skills = [s for s in skill_keywords if s in text]
-        missing = [s for s in skill_keywords if s not in text]
+        skills=[s for s in skill_keywords if s in text]
+        missing=[s for s in skill_keywords if s not in text]
 
-        score = min(50, len(skills) * 5)
-        ats = min(50, score + 5)
+        score=min(50,len(skills)*5)
+        ats=min(50,score+5)
 
-        if "machine learning" in text or "deep learning" in text:
-            role = "Data Scientist"
-            role_url = "data-scientist"
+        if "machine learning" in text:
+            role="Data Scientist"
+            role_url="data-scientist"
 
         elif "javascript" in text or "react" in text:
-            role = "Frontend Developer"
-            role_url = "frontend-developer"
+            role="Frontend Developer"
+            role_url="frontend-developer"
 
         else:
-            role = "Software Developer"
-            role_url = "software-developer"
+            role="Software Developer"
+            role_url="software-developer"
 
-        suggestions = [
+        suggestions=[
             "Add measurable achievements",
             "Include GitHub project links",
             "Add internship experience",
@@ -73,70 +80,120 @@ def index():
         role_url=role_url,
         skills=skills,
         missing=missing,
-        suggestions=suggestions
+        suggestions=suggestions,
+        error=error
     )
 
 
 @app.route("/career/<role>")
 def career(role):
 
-    if role == "data-scientist":
+    if role=="data-scientist":
 
-        title = "Data Scientist"
+        title="Data Scientist"
+        description="Data Scientists analyze large datasets and build machine learning models."
+        salary="₹8 LPA – ₹25 LPA"
 
-        description = "Data Scientists analyze data and build machine learning models."
+        skills=["Python","Machine Learning","Statistics","SQL","Data Visualization"]
 
-        roadmap = [
-            "Learn Python",
-            "Learn Statistics",
-            "Learn SQL",
-            "Learn Data Visualization",
-            "Learn Machine Learning",
-            "Build AI Projects",
-            "Apply for Data Science Jobs"
+        tools=["TensorFlow","Scikit-Learn","Power BI","Tableau"]
+
+        courses=[
+        ("Machine Learning Course","https://www.coursera.org/learn/machine-learning"),
+        ("Python Data Science","https://www.coursera.org/learn/python-data-analysis")
         ]
 
-    elif role == "frontend-developer":
+    elif role=="frontend-developer":
 
-        title = "Frontend Developer"
+        title="Frontend Developer"
+        description="Frontend developers build user interfaces and interactive web apps."
+        salary="₹4 LPA – ₹15 LPA"
 
-        description = "Frontend Developers build user interfaces and web experiences."
+        skills=["HTML","CSS","JavaScript","React"]
 
-        roadmap = [
-            "Learn HTML",
-            "Learn CSS",
-            "Learn JavaScript",
-            "Learn React",
-            "Build Web Projects",
-            "Learn Git and GitHub",
-            "Apply for Frontend Developer Jobs"
+        tools=["React","Tailwind","Bootstrap","Figma"]
+
+        courses=[
+        ("React Course","https://www.udemy.com/course/react-the-complete-guide"),
+        ("HTML CSS Course","https://www.udemy.com/course/html-css-from-beginner-to-expert")
         ]
 
     else:
 
-        title = "Software Developer"
+        title="Software Developer"
+        description="Software developers design backend systems and applications."
+        salary="₹5 LPA – ₹20 LPA"
 
-        description = "Software Developers build applications and backend systems."
+        skills=["Programming","Data Structures","Algorithms"]
 
-        roadmap = [
-            "Learn Programming (Python or Java)",
-            "Learn Data Structures",
-            "Learn Algorithms",
-            "Learn Databases",
-            "Build Real Projects",
-            "Practice Coding Interviews",
-            "Apply for Software Developer Jobs"
+        tools=["Python","Java","Docker","AWS"]
+
+        courses=[
+        ("DSA Course","https://www.geeksforgeeks.org/data-structures"),
+        ("Java Programming","https://www.udemy.com/course/java-the-complete-java-developer-course")
         ]
 
     return render_template(
         "career.html",
         title=title,
         description=description,
-        roadmap=roadmap
+        salary=salary,
+        skills=skills,
+        tools=tools,
+        courses=courses,
+        role=role
     )
+
+
+@app.route("/roadmap/<role>")
+def roadmap(role):
+
+    if role=="data-scientist":
+
+        title="Data Scientist Roadmap"
+
+        roadmap=[
+        "Learn Python",
+        "Learn Statistics",
+        "Learn SQL",
+        "Learn Data Visualization",
+        "Learn Machine Learning",
+        "Build AI Projects",
+        "Apply for Data Science Jobs"
+        ]
+
+    elif role=="frontend-developer":
+
+        title="Frontend Developer Roadmap"
+
+        roadmap=[
+        "Learn HTML",
+        "Learn CSS",
+        "Learn JavaScript",
+        "Learn React",
+        "Build Web Projects",
+        "Learn Git",
+        "Apply for Frontend Jobs"
+        ]
+
+    else:
+
+        title="Software Developer Roadmap"
+
+        roadmap=[
+        "Learn Programming",
+        "Learn Data Structures",
+        "Learn Algorithms",
+        "Build Projects",
+        "Practice Coding Interviews",
+        "Apply for Software Jobs"
+        ]
+
+    return render_template("roadmap.html",title=title,roadmap=roadmap)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
+
 
 
 
