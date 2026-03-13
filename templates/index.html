@@ -1,169 +1,136 @@
 <!DOCTYPE html>
 <html>
-
 <head>
 
 <title>AI Resume Intelligence Platform</title>
-
 <script src="https://cdn.tailwindcss.com"></script>
-
-<style>
-
-body{
-background: radial-gradient(circle at top,#020617,#0f172a);
-}
-
-.card3d{
-transition: transform 0.4s;
-}
-
-.card3d:hover{
-transform: rotateY(8deg) rotateX(6deg) scale(1.05);
-}
-
-</style>
 
 </head>
 
-<body class="text-white min-h-screen">
+<body class="bg-gradient-to-br from-gray-900 to-black text-white min-h-screen">
 
 <div class="max-w-6xl mx-auto p-10">
 
-<h1 class="text-5xl font-bold text-center mb-3">
+<h1 class="text-4xl font-bold text-center mb-6">
 AI Resume Intelligence Platform
 </h1>
 
 <p class="text-center text-gray-400 mb-10">
-Analyze resumes, calculate ATS scores and discover career opportunities using AI
+Upload your resume and get AI-powered insights.
 </p>
 
-<div class="border-2 border-dashed border-cyan-400 p-10 rounded-xl text-center mb-8">
+<form method="POST" enctype="multipart/form-data" class="text-center">
 
-<form method="POST" enctype="multipart/form-data" onsubmit="startProgress()">
+<div class="border-2 border-dashed border-blue-400 p-10 rounded-xl mb-6">
+
+<p class="mb-3">Upload Resume (PDF)</p>
 
 <input type="file" name="resume" required>
 
-<button class="bg-cyan-600 px-4 py-2 ml-4 rounded">
-Analyze Resume
+</div>
+
+<button class="bg-blue-500 hover:bg-blue-600 px-6 py-3 rounded-lg">
+Analyze Resume 🚀
 </button>
 
 </form>
 
-</div>
-
-<div id="progressContainer" class="hidden mt-6 mb-10">
-
-<div class="w-full bg-gray-700 rounded-full h-4">
-<div id="progressBar" class="bg-cyan-500 h-4 rounded-full" style="width:0%"></div>
-</div>
-
-<p class="text-sm text-gray-400 mt-2">Analyzing Resume...</p>
-
-</div>
 
 {% if score %}
 
-<div class="grid grid-cols-3 gap-6 mb-10">
+<div class="grid grid-cols-3 gap-6 mt-10 text-center">
 
-<div class="bg-white/10 p-6 rounded-xl card3d">
-📄 Resume Score
-<h2 class="text-3xl text-green-400">{{score}}</h2>
+<div class="bg-gray-800 p-6 rounded-xl">
+<h3 class="text-gray-400">Resume Score</h3>
+<h2 class="text-green-400 text-2xl">{{score}} / 50</h2>
 </div>
 
-<div class="bg-white/10 p-6 rounded-xl card3d">
-🤖 ATS Score
-<h2 class="text-3xl text-blue-400">{{ats}}</h2>
+<div class="bg-gray-800 p-6 rounded-xl">
+<h3 class="text-gray-400">ATS Score</h3>
+<h2 class="text-blue-400 text-2xl">{{ats}} / 50</h2>
 </div>
 
-<div class="bg-white/10 p-6 rounded-xl card3d">
-🎯 Career Match
-<h2 class="text-xl text-purple-400">{{role}}</h2>
-</div>
+<div class="bg-gray-800 p-6 rounded-xl">
+<h3 class="text-gray-400">Career Match</h3>
+
+<a href="/career/{{role_url}}" class="text-purple-400 text-xl underline">
+{{role}}
+</a>
 
 </div>
 
-<h2 class="text-xl mb-3">Detected Skills</h2>
+</div>
+
+
+<h2 class="text-xl mt-10 mb-3">Detected Skills</h2>
 
 {% for s in skills %}
 <span class="bg-green-500 px-3 py-1 rounded m-1 inline-block">{{s}}</span>
 {% endfor %}
 
+
 <h2 class="text-xl mt-6 mb-3">Missing Skills</h2>
 
-{% for m in missing[:5] %}
+{% for m in missing[:6] %}
 <span class="bg-red-500 px-3 py-1 rounded m-1 inline-block">{{m}}</span>
 {% endfor %}
 
+
 <h2 class="text-xl mt-10 mb-3">AI Resume Suggestions</h2>
 
-<ul class="list-disc ml-6 text-gray-300">
+<div class="bg-gray-800 p-6 rounded-xl">
 
 {% for s in suggestions %}
-<li>{{s}}</li>
+<p class="text-green-400">✔ {{s}}</p>
 {% endfor %}
-
-</ul>
-
-<h2 class="text-xl mt-10 mb-4">Live Job Opportunities (India)</h2>
-
-<div class="grid grid-cols-3 gap-6">
-
-{% for j in jobs %}
-
-<a href="{{j.url}}" target="_blank">
-
-<div class="bg-white/10 p-6 rounded-xl card3d hover:bg-cyan-700 transition">
-
-<h3 class="text-lg font-bold">{{j.title}}</h3>
-
-<p class="text-gray-400 mt-2">{{j.company}}</p>
-
-<button class="mt-4 bg-cyan-600 px-3 py-1 rounded">
-View Jobs
-</button>
 
 </div>
 
-</a>
 
-{% endfor %}
+<!-- INTERNSHIPS -->
+
+<h2 class="text-2xl mt-10 mb-6">Internship Opportunities</h2>
+
+<div class="grid grid-cols-3 gap-6">
+
+<a href="https://internshala.com" target="_blank" class="bg-purple-700 p-6 rounded-xl">Internshala</a>
+
+<a href="https://www.linkedin.com/jobs/internships" target="_blank" class="bg-purple-600 p-6 rounded-xl">LinkedIn Internships</a>
+
+<a href="https://in.indeed.com/jobs?q=internship" target="_blank" class="bg-purple-500 p-6 rounded-xl">Indeed Internships</a>
+
+<a href="https://www.letsintern.com" target="_blank" class="bg-purple-400 p-6 rounded-xl text-black">LetsIntern</a>
+
+<a href="https://www.twenty19.com" target="_blank" class="bg-purple-300 p-6 rounded-xl text-black">Twenty19</a>
+
+<a href="https://wellfound.com/jobs" target="_blank" class="bg-purple-200 p-6 rounded-xl text-black">AngelList</a>
+
+</div>
+
+
+<!-- JOBS -->
+
+<h2 class="text-2xl mt-12 mb-6">Job Opportunities</h2>
+
+<div class="grid grid-cols-3 gap-6">
+
+<a href="https://www.linkedin.com/jobs" target="_blank" class="bg-teal-700 p-6 rounded-xl">LinkedIn Jobs</a>
+
+<a href="https://in.indeed.com" target="_blank" class="bg-teal-600 p-6 rounded-xl">Indeed Jobs</a>
+
+<a href="https://www.naukri.com" target="_blank" class="bg-teal-500 p-6 rounded-xl">Naukri</a>
+
+<a href="https://www.glassdoor.co.in" target="_blank" class="bg-teal-400 p-6 rounded-xl text-black">Glassdoor</a>
+
+<a href="https://www.freshersworld.com" target="_blank" class="bg-teal-300 p-6 rounded-xl text-black">FreshersWorld</a>
+
+<a href="https://www.foundit.in" target="_blank" class="bg-teal-200 p-6 rounded-xl text-black">Foundit</a>
 
 </div>
 
 {% endif %}
 
-<footer class="text-center text-gray-500 mt-20">
-
-AI Resume Intelligence Platform  
-Built using Flask + AI Resume Analysis
-
-</footer>
-
 </div>
 
-<script>
-
-function startProgress(){
-
-document.getElementById("progressContainer").classList.remove("hidden")
-
-let width=0
-
-let interval=setInterval(function(){
-
-width+=10
-document.getElementById("progressBar").style.width=width+"%"
-
-if(width>=100){
-clearInterval(interval)
-}
-
-},200)
-
-}
-
-</script>
-
 </body>
-
 </html>
